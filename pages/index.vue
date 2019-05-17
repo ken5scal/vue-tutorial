@@ -1,16 +1,18 @@
 <template>
   <h1>
     Authorization Code: {{ results }}
-    <v-app>
-      <div id="sample-hoge">
+    <v-app id="sampleHoge">
+      <div>
+        result from backend {{ hoge }}
         <v-btn
           color="info"
           href="https://dev-991803.oktapreview.com/login/login.htm?fromURI=/oauth2/v1/authorize/redirect?okta_key=lt3HjBGk7_s7T77HRahUxUSQTe2RXJ-jSaIUle3lV7s"
           >Authorize</v-btn
         >
-        <p>hello {{ msg1 }}</p>
-        result from backend {{ hoge }}
+        <input v-model.trim="sampleInputText" type="text" name="inStr" />
+        <p>{{ kaibun() }}</p>
         <button name="myBtn" @click="changeMsg1()">Click Me</button>
+        <p>hello {{ msg1 }}</p>
       </div>
     </v-app>
   </h1>
@@ -20,10 +22,12 @@
 import axios from 'axios'
 
 export default {
-  el: '#sample-hoge',
+  el: '#sampleHoge',
   data: function() {
     return {
-      msg1: 'world'
+      msg1: 'world',
+      sampleInputText: 'Please input here',
+      results: []
     }
   },
   computed: {
@@ -38,6 +42,20 @@ export default {
     })
   },
   methods: {
+    kaibun: function() {
+      if (this.sampleInputText.length === 0) {
+        return
+      }
+      const rStr = this.sampleInputText
+        .split('')
+        .reverse()
+        .join('')
+      if (this.sampleInputText === rStr) {
+        return 'yes it is 回分'
+      } else {
+        return 'no it is 回分'
+      }
+    },
     changeMsg1: function() {
       this.msg1 = 'こんにちは'
     },
