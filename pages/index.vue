@@ -8,6 +8,13 @@
         font-size: 2em;
         color: red;
       }
+      .delbtn {
+        margin-left: 10px;
+      }
+      .done {
+        color: gray;
+        text-decoration: line-through;
+      }
     </style>
     Authorization Code: {{ results }}
     <div>
@@ -78,6 +85,23 @@
       <ul>
         <li v-for="(a, i) in texts.adults" :key="i">{{ a }}</li>
       </ul>
+      <input v-model.trim="newToDo" type="text" placeholder="put new to do" />
+      <button @click="addTodo">Add Todo</button>
+      <ul>
+        <li
+          v-for="(t, i) in toDos"
+          :key="i"
+          :class="{ done: t.done }"
+          @mouseover="t.hover = true"
+          @mouseout="t.hover = false"
+        >
+          <input v-model="t.done" type="checkbox" />
+          {{ t.text }}
+          <v-btn v-show="t.done && t.hover" color="warn" @click="removeToDo(i)"
+            >x</v-btn
+          >
+        </li>
+      </ul>
     </div>
   </v-app>
 </template>
@@ -124,7 +148,10 @@ export default {
         { id: 2, name: 'Yumiko Suzuki', age: 65, adult: true },
         { id: 3, name: 'Stan Suzuki', age: 65, adult: true },
         { id: 4, name: 'Goro Suzuki', age: 29, adult: false }
-      ]
+      ],
+      newToDo: '',
+      toDos: [],
+      localStorageKey: 'toDoList'
     }
   },
   computed: {
@@ -149,6 +176,20 @@ export default {
         .filter(function(customer, index, array) {
           return customer.age <= 31
         })
+    }
+  },
+  watch: {
+    toDos: {
+      handler: function() {
+        localStorage.setItem(this.localStorageKey, JSON.stringify(this.toDos))
+      },
+      deep: true
+    }
+  },
+  mounted: function() {
+    const dataStr = localStorage.getItem(this.localStorageKey)
+    if (dataStr) {
+      this.toDos = JSON.parse(dataStr)
     }
   },
   // fetch({ store, params }) {
@@ -201,6 +242,18 @@ export default {
           fuga = 'hello'
           console.log(fuga)
         })
+    },
+    addTodo: function() {
+      if (this.newToDo === '') {
+        return
+      }
+      this.toDos.push({ text: this.newToDo, done: false, hover: false })
+      this.newToDo = ''
+    },
+    removeToDo: function(idx) {
+      if (this.toDos[idx].done === true) {
+        this.toDos.splice([idx], 1)
+      }
     }
   }
 }
