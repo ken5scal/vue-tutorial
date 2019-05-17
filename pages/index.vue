@@ -24,11 +24,12 @@
       <p :class="{ leftAlign: true, big: enhance }">
         txt from button: {{ texts.msgFromButton }}
       </p>
+      <p v-if="enhance">txt from button: {{ texts.msgFromButton }}</p>
       <p v-once :class="{ 'leftAlign big': true }">
         txt from button but once: {{ texts.msgFromButton }}
       </p>
       <a :href="toGoogle">Google Search</a>
-      <v-flex text-xs-center><img v-bind="imageAttrs"/></v-flex>
+      <v-flex text-xs-center><img v-if="enhance" v-bind="imageAttrs"/></v-flex>
       <p :style="[myStyle, newStyle]">
         css
       </p>
@@ -38,6 +39,19 @@
       </p>
       <p>メソッド: {{ dateMethod() }}</p>
       <p>西暦: {{ sYear }} -> 平成 {{ hYear }}</p>
+      <ul>
+        <li v-for="(y, i) in years" :key="i">{{ i + 1 }} : {{ y - 2000 }}年</li>
+      </ul>
+      <table class="table">
+        <th>ID</th>
+        <th>Name</th>
+        <th>Age</th>
+        <tr v-for="customer in underAge" :key="customer.id">
+          <td>{{ customer.id }}</td>
+          <td>{{ customer.name }}</td>
+          <td>{{ customer.age }}</td>
+        </tr>
+      </table>
     </div>
   </v-app>
 </template>
@@ -70,7 +84,14 @@ export default {
         'font-size': '1em' // Same as fontSize but in CSS property naming
       },
       enhance: false,
-      sYear: 2000
+      sYear: 2000,
+      years: [5000, 4000, 3000, 2000, 1000],
+      customers: [
+        { id: 1, name: 'Kengo Suzuki', age: 31 },
+        { id: 2, name: 'Yumiko Suzuki', age: 65 },
+        { id: 3, name: 'Stan Suzuki', age: 65 },
+        { id: 4, name: 'Goro Suzuki', age: 29 }
+      ]
     }
   },
   computed: {
@@ -85,6 +106,16 @@ export default {
       set: function(newValue) {
         this.sYear = newValue + 1988
       }
+    },
+    underAge: function() {
+      return this.customers
+        .slice()
+        .sort(function(a, b) {
+          return a.age - b.age
+        })
+        .filter(function(customer, index, array) {
+          return customer.age <= 31
+        })
     }
   },
   fetch({ store, params }) {
