@@ -31,7 +31,7 @@ export default {
   },
   methods: {
     handleClick: function() {
-      axios.get('http://localhost:8080/').then(res => {
+      axios.get('https://dev-991803.oktapreview.com/oauth2/default/v1/authorize?client_id=0oakuhp8brWUfRhGI0h7&response_type=code&scope=openid%20offline_access&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fauthorization%2Fcallback&state=state-9aa6bc0-a2a2-4s57-be1a-d0eaaa2fd9bb6ac02').then(res => {
         this.results = res.data
       })
     }
