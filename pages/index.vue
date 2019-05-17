@@ -11,7 +11,6 @@
     </style>
     Authorization Code: {{ results }}
     <div>
-      result from backend {{ hoge }}
       <div>
         <v-btn
           color="info"
@@ -33,6 +32,12 @@
       <p :style="[myStyle, newStyle]">
         css
       </p>
+      <p>
+        算出プロパティ（依存するデータが変更されないと実行されない):
+        {{ dateComputed }}
+      </p>
+      <p>メソッド: {{ dateMethod() }}</p>
+      <p>西暦: {{ sYear }} -> 平成 {{ hYear }}</p>
     </div>
   </v-app>
 </template>
@@ -64,12 +69,22 @@ export default {
         backgroundColor: 'yellow',
         'font-size': '1em' // Same as fontSize but in CSS property naming
       },
-      enhance: false
+      enhance: false,
+      sYear: 2000
     }
   },
   computed: {
-    hoge() {
-      return this.$store.state.albums
+    // 算出プロパティ
+    dateComputed: function() {
+      return new Date().toLocaleString()
+    },
+    hYear: {
+      get: function() {
+        return this.sYear - 1999
+      },
+      set: function(newValue) {
+        this.sYear = newValue + 1988
+      }
     }
   },
   fetch({ store, params }) {
@@ -79,6 +94,11 @@ export default {
     })
   },
   methods: {
+    dateMethod: function() {
+      // you can call method from Computed property as well
+      console.log('Date Computed: ' + this.dateComputed)
+      return new Date().toLocaleString()
+    },
     kaibun: function() {
       if (this.texts.sampleInputText.length === 0) {
         return
