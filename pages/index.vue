@@ -18,9 +18,15 @@
           >Authorize</v-btn
         >
       </div>
-      <input v-model.trim="texts.sampleInputText" type="text" name="inStr" />
+      <input
+        v-model.trim.lazy="texts.sampleInputText"
+        type="text"
+        name="inStr"
+      />
       <p>{{ kaibun() }}</p>
-      <button name="myBtn" @click="changeMsg1('clicked')">Click Me</button>
+      <button name="myBtn" @click="changeMsg1('clicked', $event)">
+        Click Me
+      </button>
       <p :class="{ leftAlign: true, big: enhance }">
         txt from button: {{ texts.msgFromButton }}
       </p>
@@ -29,7 +35,9 @@
         txt from button but once: {{ texts.msgFromButton }}
       </p>
       <a :href="toGoogle">Google Search</a>
-      <v-flex text-xs-center><img v-if="enhance" v-bind="imageAttrs"/></v-flex>
+      <div @click="move">
+        <img v-if="enhance" v-bind="imageAttrs" :style="imageStyle" />
+      </div>
       <p :style="[myStyle, newStyle]">
         css
       </p>
@@ -40,18 +48,36 @@
       <p>メソッド: {{ dateMethod() }}</p>
       <p>西暦: {{ sYear }} -> 平成 {{ hYear }}</p>
       <ul>
-        <li v-for="(y, i) in years" :key="i">{{ i + 1 }} : {{ y - 2000 }}年</li>
+        <li v-for="(y, i) in years" :key="i">{{ y - 2000 }}年</li>
       </ul>
       <table class="table">
+        <th />
+        <th>Adult</th>
         <th>ID</th>
         <th>Name</th>
         <th>Age</th>
-        <tr v-for="customer in underAge" :key="customer.id">
+        <tr v-for="customer in sortedAge" :key="customer.id">
+          <td>
+            <input id="adult" v-model="customer.adult" type="checkbox" />
+          </td>
+          <td>
+            <input
+              :id="customer.id"
+              v-model="texts.adults"
+              type="checkbox"
+              :value="customer.name"
+            />
+          </td>
+          <td>{{ customer.adult }}</td>
           <td>{{ customer.id }}</td>
           <td>{{ customer.name }}</td>
           <td>{{ customer.age }}</td>
         </tr>
       </table>
+
+      <ul>
+        <li v-for="(a, i) in texts.adults" :key="i">{{ a }}</li>
+      </ul>
     </div>
   </v-app>
 </template>
@@ -65,7 +91,8 @@ export default {
     return {
       texts: {
         msgFromButton: '',
-        sampleInputText: '"Please input here"'
+        sampleInputText: '"Please input here"',
+        adults: []
       },
       results: [],
       toGoogle: 'http://google.com',
@@ -73,6 +100,12 @@ export default {
         src: '/v.png',
         alt: 'Vuetify.js',
         class: 'mb-5'
+      },
+      imageStyle: {
+        position: 'absolute',
+        left: '50px',
+        top: '100px',
+        transition: 'all 0.5s'
       },
       myStyle: {
         color: 'blue',
@@ -87,10 +120,10 @@ export default {
       sYear: 2000,
       years: [5000, 4000, 3000, 2000, 1000],
       customers: [
-        { id: 1, name: 'Kengo Suzuki', age: 31 },
-        { id: 2, name: 'Yumiko Suzuki', age: 65 },
-        { id: 3, name: 'Stan Suzuki', age: 65 },
-        { id: 4, name: 'Goro Suzuki', age: 29 }
+        { id: 1, name: 'Kengo Suzuki', age: 31, adult: true },
+        { id: 2, name: 'Yumiko Suzuki', age: 65, adult: true },
+        { id: 3, name: 'Stan Suzuki', age: 65, adult: true },
+        { id: 4, name: 'Goro Suzuki', age: 29, adult: false }
       ]
     }
   },
@@ -107,7 +140,7 @@ export default {
         this.sYear = newValue + 1988
       }
     },
-    underAge: function() {
+    sortedAge: function() {
       return this.customers
         .slice()
         .sort(function(a, b) {
@@ -118,12 +151,12 @@ export default {
         })
     }
   },
-  fetch({ store, params }) {
-    return axios.get('http://localhost:8080/').then(res => {
-      store.commit('add', res.data)
-      console.log(store.state.albums)
-    })
-  },
+  // fetch({ store, params }) {
+  //   return axios.get('http://localhost:8080/').then(res => {
+  //     store.commit('add', res.data)
+  //     console.log(store.state.albums)
+  //   })
+  // },
   methods: {
     dateMethod: function() {
       // you can call method from Computed property as well
@@ -144,7 +177,12 @@ export default {
         return 'no it is 回分'
       }
     },
-    changeMsg1: function(msg) {
+    move: function(e) {
+      console.log(e)
+      this.imageStyle.left = e.clientX - 60 + 'px'
+      this.imageStyle.top = e.clientY - 60 + 'px'
+    },
+    changeMsg1: function(msg, e) {
       this.texts.msgFromButton = msg
       this.enhance = !this.enhance
     },
