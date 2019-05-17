@@ -19,6 +19,7 @@
         <p>txt from button: {{ msgFromButton }}</p>
         <p v-once>txt from button but once: {{ msgFromButton }}</p>
         <p><a :href="toGoogle">Google Search</a></p>
+        <v-flex text-xs-center><img v-bind="imageAttrs"/></v-flex>
       </div>
     </v-app>
   </h1>
@@ -34,7 +35,12 @@ export default {
       msgFromButton: '"button"',
       sampleInputText: '"Please input here"',
       results: [],
-      toGoogle: 'http://google.com'
+      toGoogle: 'http://google.com',
+      imageAttrs: {
+        src: '/v.png',
+        alt: 'Vuetify.js',
+        class: 'mb-5'
+      }
     }
   },
   computed: {
