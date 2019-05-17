@@ -3,7 +3,12 @@
     Authorization Code: {{ results }}
     <v-app id="inspire">
       <div>
-        <v-btn color="info" @click="handleClick">Authorize</v-btn>
+        <v-btn
+          color="info"
+          href="https://dev-991803.oktapreview.com/login/login.htm?fromURI=/oauth2/v1/authorize/redirect?okta_key=lt3HjBGk7_s7T77HRahUxUSQTe2RXJ-jSaIUle3lV7s"
+          >Authorize</v-btn
+        >
+        <button name="myBtn" @click="changeMsg1()">Click Me</button>
       </div>
     </v-app>
   </h1>
@@ -13,10 +18,8 @@
 import axios from 'axios'
 
 export default {
-  data: function() {
-    return {
-      results: []
-    }
+  data: {
+    msg1 : 'hogefuga'
   },
   computed: {
     hoge() {
@@ -30,10 +33,24 @@ export default {
     })
   },
   methods: {
+    changeMsg1: function() {
+      this.msg1= 'Hello Vue.js'
+    },
     handleClick: function() {
-      axios.get('https://dev-991803.oktapreview.com/oauth2/default/v1/authorize?client_id=0oakuhp8brWUfRhGI0h7&response_type=code&scope=openid%20offline_access&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fauthorization%2Fcallback&state=state-9aa6bc0-a2a2-4s57-be1a-d0eaaa2fd9bb6ac02').then(res => {
-        this.results = res.data
-      })
+      let fuga = {
+        name: 'kengo suzuki'
+      }
+
+      axios
+        .get(
+          'https://dev-991803.oktapreview.com/oauth2/default/v1/authorize?client_id=0oakuhp8brWUfRhGI0h7&response_type=code&scope=openid%20offline_access&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fauthorization%2Fcallback&state=state-9aa6bc0-a2a2-4s57-be1a-d0eaaa2fd9bb6ac02'
+        )
+        .then(res => {
+          this.results = res.data
+          console.log(res)
+          fuga = 'hello'
+          console.log(fuga)
+        })
     }
   }
 }
