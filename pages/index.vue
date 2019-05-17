@@ -1,31 +1,40 @@
 <template>
-  <h1>
+  <v-app id="sampleHoge">
+    <style>
+      .left {
+        text-align: left;
+      }
+      .big {
+        font-size: 2em;
+        color: red;
+      }
+    </style>
     Authorization Code: {{ results }}
-    <v-app id="sampleHoge">
+    <div>
+      result from backend {{ hoge }}
       <div>
-        result from backend {{ hoge }}
-        <div>
-          <v-btn
-            color="info"
-            href="https://dev-991803.oktapreview.com/login/login.htm?fromURI=/oauth2/v1/authorize/redirect?okta_key=lt3HjBGk7_s7T77HRahUxUSQTe2RXJ-jSaIUle3lV7s"
-            >Authorize</v-btn
-          >
-        </div>
-        <input v-model.trim="sampleInputText" type="text" name="inStr" />
-        <p>{{ kaibun() }}</p>
-        <div>
-          <button name="myBtn" @click="changeMsg1()">Click Me</button>
-        </div>
-        <p>txt from button: {{ msgFromButton }}</p>
-        <p v-once>txt from button but once: {{ msgFromButton }}</p>
-        <p><a :href="toGoogle">Google Search</a></p>
-        <v-flex text-xs-center><img v-bind="imageAttrs"/></v-flex>
-        <p :style="{ color: color, textAlign: align, fontSize: size + 'em' }">
-          css
-        </p>
+        <v-btn
+          color="info"
+          href="https://dev-991803.oktapreview.com/login/login.htm?fromURI=/oauth2/v1/authorize/redirect?okta_key=lt3HjBGk7_s7T77HRahUxUSQTe2RXJ-jSaIUle3lV7s"
+          >Authorize</v-btn
+        >
       </div>
-    </v-app>
-  </h1>
+      <input v-model.trim="texts.sampleInputText" type="text" name="inStr" />
+      <p>{{ kaibun() }}</p>
+      <button name="myBtn" @click="changeMsg1('clicked')">Click Me</button>
+      <p :class="{ leftAlign: true, big: enhance }">
+        txt from button: {{ texts.msgFromButton }}
+      </p>
+      <p v-once :class="{ 'leftAlign big': true }">
+        txt from button but once: {{ texts.msgFromButton }}
+      </p>
+      <a :href="toGoogle">Google Search</a>
+      <v-flex text-xs-center><img v-bind="imageAttrs"/></v-flex>
+      <p :style="[myStyle, newStyle]">
+        css
+      </p>
+    </div>
+  </v-app>
 </template>
 
 <script>
@@ -35,8 +44,10 @@ export default {
   el: '#sampleHoge',
   data: function() {
     return {
-      msgFromButton: '"button"',
-      sampleInputText: '"Please input here"',
+      texts: {
+        msgFromButton: '',
+        sampleInputText: '"Please input here"'
+      },
       results: [],
       toGoogle: 'http://google.com',
       imageAttrs: {
@@ -44,9 +55,16 @@ export default {
         alt: 'Vuetify.js',
         class: 'mb-5'
       },
-      color: 'blue',
-      align: 'center',
-      size: '3'
+      myStyle: {
+        color: 'blue',
+        align: 'center',
+        fontSize: '3em'
+      },
+      newStyle: {
+        backgroundColor: 'yellow',
+        'font-size': '1em' // Same as fontSize but in CSS property naming
+      },
+      enhance: false
     }
   },
   computed: {
@@ -62,21 +80,22 @@ export default {
   },
   methods: {
     kaibun: function() {
-      if (this.sampleInputText.length === 0) {
+      if (this.texts.sampleInputText.length === 0) {
         return
       }
-      const rStr = this.sampleInputText
+      const rStr = this.texts.sampleInputText
         .split('')
         .reverse()
         .join('')
-      if (this.sampleInputText === rStr) {
+      if (this.texts.sampleInputText === rStr) {
         return 'yes it is 回分'
       } else {
         return 'no it is 回分'
       }
     },
-    changeMsg1: function() {
-      this.msgFromButton = 'こんにちは'
+    changeMsg1: function(msg) {
+      this.texts.msgFromButton = msg
+      this.enhance = !this.enhance
     },
     handleClick: function() {
       let fuga = {
