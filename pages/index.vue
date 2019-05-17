@@ -4,15 +4,21 @@
     <v-app id="sampleHoge">
       <div>
         result from backend {{ hoge }}
-        <v-btn
-          color="info"
-          href="https://dev-991803.oktapreview.com/login/login.htm?fromURI=/oauth2/v1/authorize/redirect?okta_key=lt3HjBGk7_s7T77HRahUxUSQTe2RXJ-jSaIUle3lV7s"
-          >Authorize</v-btn
-        >
+        <div>
+          <v-btn
+            color="info"
+            href="https://dev-991803.oktapreview.com/login/login.htm?fromURI=/oauth2/v1/authorize/redirect?okta_key=lt3HjBGk7_s7T77HRahUxUSQTe2RXJ-jSaIUle3lV7s"
+            >Authorize</v-btn
+          >
+        </div>
         <input v-model.trim="sampleInputText" type="text" name="inStr" />
         <p>{{ kaibun() }}</p>
-        <button name="myBtn" @click="changeMsg1()">Click Me</button>
-        <p>hello {{ msg1 }}</p>
+        <div>
+          <button name="myBtn" @click="changeMsg1()">Click Me</button>
+        </div>
+        <p>txt from button: {{ msgFromButton }}</p>
+        <p v-once>txt from button but once: {{ msgFromButton }}</p>
+        <p><a :href="toGoogle">Google Search</a></p>
       </div>
     </v-app>
   </h1>
@@ -25,9 +31,10 @@ export default {
   el: '#sampleHoge',
   data: function() {
     return {
-      msg1: 'world',
-      sampleInputText: 'Please input here',
-      results: []
+      msgFromButton: '"button"',
+      sampleInputText: '"Please input here"',
+      results: [],
+      toGoogle: 'http://google.com'
     }
   },
   computed: {
@@ -57,7 +64,7 @@ export default {
       }
     },
     changeMsg1: function() {
-      this.msg1 = 'こんにちは'
+      this.msgFromButton = 'こんにちは'
     },
     handleClick: function() {
       let fuga = {
