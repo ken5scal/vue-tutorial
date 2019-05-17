@@ -1,13 +1,15 @@
 <template>
   <h1>
     Authorization Code: {{ results }}
-    <v-app id="inspire">
-      <div>
+    <v-app>
+      <div id="sample-hoge">
         <v-btn
           color="info"
           href="https://dev-991803.oktapreview.com/login/login.htm?fromURI=/oauth2/v1/authorize/redirect?okta_key=lt3HjBGk7_s7T77HRahUxUSQTe2RXJ-jSaIUle3lV7s"
           >Authorize</v-btn
         >
+        <p>hello {{ msg1 }}</p>
+        result from backend {{ hoge }}
         <button name="myBtn" @click="changeMsg1()">Click Me</button>
       </div>
     </v-app>
@@ -18,8 +20,11 @@
 import axios from 'axios'
 
 export default {
-  data: {
-    msg1 : 'hogefuga'
+  el: '#sample-hoge',
+  data: function() {
+    return {
+      msg1: 'world'
+    }
   },
   computed: {
     hoge() {
@@ -28,13 +33,13 @@ export default {
   },
   fetch({ store, params }) {
     return axios.get('http://localhost:8080/').then(res => {
-      // store.commit('add', res.data)
-      // console.log(store.state.albums)
+      store.commit('add', res.data)
+      console.log(store.state.albums)
     })
   },
   methods: {
     changeMsg1: function() {
-      this.msg1= 'Hello Vue.js'
+      this.msg1 = 'こんにちは'
     },
     handleClick: function() {
       let fuga = {
