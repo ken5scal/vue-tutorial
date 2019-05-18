@@ -1,6 +1,67 @@
 <template>
   <v-app id="sampleHoge">
     <style>
+      .box {
+        width: 100px;
+        height: 100px;
+        background: blue;
+        <!-- they are defined in Vue attr -->
+        <!-- left: 500px;
+        right: 500px; -->
+        <!-- transition: all 1s ease-in; -->
+        <!-- this can be defined in data of Vue -->
+      }
+      @keyframes myAnime {
+        0% {
+          transform: rotate(0deg) scale(1) translateX(-200px);
+          background: yellow;
+        }
+        50% {
+          transform: rotate(0deg) scale(1) translateX(-100px);
+          background: green;
+        }
+        100% {
+          transform: translateX(0px) rotate(360deg);
+        }
+      }
+      .box-enter {
+        translateX(-200px)
+        opacity: 0;
+      }
+      .box-enter-active {
+        animation: myAnime 3s ease-in;
+      }
+      .box-leave-to {
+        transform: translateX(-200px) scale(0.1) rotate(360deg);
+        opacity: 1;
+      }
+      .toDoList-enter {
+        opacity: 0;
+      }
+      .toDoList-enter-active {
+        transform: translateX(200px);
+        position: absolute;
+        transition: all 1s;
+      }
+      .toDoList-leave-active {
+        position: absolute;
+        opacity: 1;
+        transition: all 1s;
+      }
+      .toDoList-leave-to {
+        transform: translateX(200px);
+        opacity: 0;
+      }
+      .toDoList-move {
+        transition: transform 1s;
+      }
+      .v-enter, .v-leave-to {
+        transform: translateX(100px);
+        opacity: 0;
+      }
+      .v-enter-active, .v-leave-active, .box-leave-active {
+        transition: all 1s ease-in;
+      }
       .left {
         text-align: left;
       }
@@ -43,7 +104,9 @@
       </p>
       <a :href="toGoogle">Google Search</a>
       <div @click="move">
-        <img v-if="enhance" v-bind="imageAttrs" :style="imageStyle" />
+        <transition name="box">
+          <img v-if="enhance" v-bind="boxImageAttrs" :style="boxImageStyle" />
+        </transition>
       </div>
       <p :style="[myStyle, newStyle]">
         css
@@ -87,21 +150,21 @@
       </ul>
       <input v-model.trim="newToDo" type="text" placeholder="put new to do" />
       <button @click="addTodo">Add Todo</button>
-      <ul>
+      <transition-group tag="ul" name="toDoList">
         <li
           v-for="(t, i) in toDos"
-          :key="i"
+          :key="t.text"
           :class="{ done: t.done }"
           @mouseover="t.hover = true"
           @mouseout="t.hover = false"
         >
           <input v-model="t.done" type="checkbox" />
-          {{ t.text }}
+          <span>{{ t.text }}</span>
           <v-btn v-show="t.done && t.hover" color="warn" @click="removeToDo(i)"
             >x</v-btn
           >
         </li>
-      </ul>
+      </transition-group>
       <p>Today is {{ date | jaDay | addJaYobi('だよ') }}</p>
     </div>
   </v-app>
@@ -137,16 +200,16 @@ export default {
       },
       results: [],
       toGoogle: 'http://google.com',
-      imageAttrs: {
+      boxImageAttrs: {
         src: '/v.png',
         alt: 'Vuetify.js',
-        class: 'mb-5'
+        class: 'box' // this class is defined on <style>
       },
-      imageStyle: {
+      boxImageStyle: {
+        // this can be defined in <style>
         position: 'absolute',
-        left: '50px',
-        top: '100px',
-        transition: 'all 0.5s'
+        left: '400px',
+        top: '100px'
       },
       myStyle: {
         color: 'blue',
