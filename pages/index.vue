@@ -102,6 +102,7 @@
           >
         </li>
       </ul>
+      <p>Today is {{ date | jaDay | addJaYobi('だよ') }}</p>
     </div>
   </v-app>
 </template>
@@ -111,6 +112,22 @@ import axios from 'axios'
 
 export default {
   el: '#sampleHoge',
+  filters: {
+    // Filter is an option
+    // Can be defined globally
+    // Cannot refer to `this` contexts
+    jaDay: function(date) {
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'fri', 'Sat']
+      return days[date.getDay()]
+    },
+    addJaYobi: function(date, end) {
+      if (end) {
+        return date + '曜日' + end
+      } else {
+        return date + '曜日'
+      }
+    }
+  },
   data: function() {
     return {
       texts: {
@@ -151,11 +168,15 @@ export default {
       ],
       newToDo: '',
       toDos: [],
-      localStorageKey: 'toDoList'
+      localStorageKey: 'toDoList',
+      date: new Date()
     }
   },
   computed: {
     // 算出プロパティ
+    // It's a property. Methods is a method
+    // You can add a getter and setter
+    // It will be cached.
     dateComputed: function() {
       return new Date().toLocaleString()
     },
@@ -192,13 +213,9 @@ export default {
       this.toDos = JSON.parse(dataStr)
     }
   },
-  // fetch({ store, params }) {
-  //   return axios.get('http://localhost:8080/').then(res => {
-  //     store.commit('add', res.data)
-  //     console.log(store.state.albums)
-  //   })
-  // },
   methods: {
+    // Method Options
+    // Can depend on `this` context
     dateMethod: function() {
       // you can call method from Computed property as well
       console.log('Date Computed: ' + this.dateComputed)
