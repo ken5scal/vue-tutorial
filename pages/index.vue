@@ -1,82 +1,5 @@
 <template>
   <v-app id="sampleHoge">
-    <style>
-      .box {
-        width: 100px;
-        height: 100px;
-        background: blue;
-        <!-- they are defined in Vue attr -->
-        <!-- left: 500px;
-        right: 500px; -->
-        <!-- transition: all 1s ease-in; -->
-        <!-- this can be defined in data of Vue -->
-      }
-      @keyframes myAnime {
-        0% {
-          transform: rotate(0deg) scale(1) translateX(-200px);
-          background: yellow;
-        }
-        50% {
-          transform: rotate(0deg) scale(1) translateX(-100px);
-          background: green;
-        }
-        100% {
-          transform: translateX(0px) rotate(360deg);
-        }
-      }
-      .box-enter {
-        translateX(-200px)
-        opacity: 0;
-      }
-      .box-enter-active {
-        animation: myAnime 3s ease-in;
-      }
-      .box-leave-to {
-        transform: translateX(-200px) scale(0.1) rotate(360deg);
-        opacity: 1;
-      }
-      .toDoList-enter {
-        opacity: 0;
-      }
-      .toDoList-enter-active {
-        transform: translateX(200px);
-        position: absolute;
-        transition: all 1s;
-      }
-      .toDoList-leave-active {
-        position: absolute;
-        opacity: 1;
-        transition: all 1s;
-      }
-      .toDoList-leave-to {
-        transform: translateX(200px);
-        opacity: 0;
-      }
-      .toDoList-move {
-        transition: transform 1s;
-      }
-      .v-enter, .v-leave-to {
-        transform: translateX(100px);
-        opacity: 0;
-      }
-      .v-enter-active, .v-leave-active, .box-leave-active {
-        transition: all 1s ease-in;
-      }
-      .left {
-        text-align: left;
-      }
-      .big {
-        font-size: 2em;
-        color: red;
-      }
-      .delbtn {
-        margin-left: 10px;
-      }
-      .done {
-        color: gray;
-        text-decoration: line-through;
-      }
-    </style>
     Authorization Code: {{ results }}
     <div>
       <div>
@@ -166,6 +89,9 @@
         </li>
       </transition-group>
       <p>Today is {{ date | jaDay | addJaYobi('だよ') }}</p>
+      <div id="sampleHoge">
+        <my-comp>oh hi</my-comp>
+      </div>
     </div>
   </v-app>
 </template>
@@ -175,6 +101,11 @@ import axios from 'axios'
 
 export default {
   el: '#sampleHoge',
+  components: {
+    'my-comp': {
+      template: '<p>Hello this is custom template</p>'
+    }
+  },
   filters: {
     // Filter is an option
     // Can be defined globally
@@ -338,3 +269,79 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.box {
+  width: 100px;
+  height: 100px;
+  background: blue;
+}
+@keyframes myAnime {
+  0% {
+    transform: rotate(0deg) scale(1) translateX(-200px);
+    background: yellow;
+  }
+  50% {
+    transform: rotate(0deg) scale(1) translateX(-100px);
+    background: green;
+  }
+  100% {
+    transform: translateX(0px) rotate(360deg);
+  }
+}
+.box-enter {
+  transform: translateX(-200px);
+  opacity: 0;
+}
+.box-enter-active {
+  animation: myAnime 3s ease-in;
+}
+.box-leave-to {
+  transform: translateX(-200px) scale(0.1) rotate(360deg);
+  opacity: 1;
+}
+.toDoList-enter {
+  opacity: 0;
+}
+.toDoList-enter-active {
+  transform: translateX(200px);
+  position: absolute;
+  transition: all 1s;
+}
+.toDoList-leave-active {
+  position: absolute;
+  opacity: 1;
+  transition: all 1s;
+}
+.toDoList-leave-to {
+  transform: translateX(200px);
+  opacity: 0;
+}
+.toDoList-move {
+  transition: transform 1s;
+}
+.v-enter,
+.v-leave-to {
+  transform: translateX(100px);
+  opacity: 0;
+}
+.v-enter-active,
+.v-leave-active,
+.box-leave-active {
+  transition: all 1s ease-in;
+}
+.left {
+  text-align: left;
+}
+.big {
+  font-size: 2em;
+  color: red;
+}
+.delbtn {
+  margin-left: 10px;
+}
+.done {
+  color: gray;
+  text-decoration: line-through;
+}
+</style>
