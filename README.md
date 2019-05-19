@@ -19,4 +19,10 @@ $ yarn start
 $ yarn run generate
 ```
 
+## Lint
+
+```
+$ node_modules/.bin/eslint --fix --ext .vue,.js .
+```
+
 For detailed explanation on how things work, checkout [Nuxt.js docs](https://nuxtjs.org).
